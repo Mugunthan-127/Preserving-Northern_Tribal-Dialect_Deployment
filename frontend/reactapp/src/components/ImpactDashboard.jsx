@@ -3,6 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { motion } from 'framer-motion';
 import { TrendingUp, Users, Mic } from 'lucide-react';
 import axios from 'axios';
+import config from '../config';
 
 const COLORS = ['#FF8042', '#0088FE', '#00C49F', '#FFBB28', '#8884d8'];
 
@@ -17,7 +18,7 @@ export const ImpactDashboard = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const res = await axios.get('http://localhost:8080/api/v1/stats');
+                const res = await axios.get(`${config.API_BASE_URL}/api/v1/stats`);
                 setStats(res.data);
             } catch (err) {
                 console.error("Failed to fetch stats", err);

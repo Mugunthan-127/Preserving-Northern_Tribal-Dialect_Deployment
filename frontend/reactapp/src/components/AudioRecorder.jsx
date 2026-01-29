@@ -3,6 +3,7 @@ import { Mic, Square, Upload, Play, RefreshCw, AlertCircle, CheckCircle, Radio }
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { incrementContribution } from '../services/GamificationService';
+import config from '../config';
 
 export const AudioRecorder = () => {
     const [isRecording, setIsRecording] = useState(false);
@@ -151,7 +152,7 @@ export const AudioRecorder = () => {
         formData.append('consent', consent);
 
         try {
-            const response = await axios.post('http://localhost:8080/api/v1/preservation/upload', formData, {
+            const response = await axios.post(`${config.API_BASE_URL}/api/v1/preservation/upload`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 

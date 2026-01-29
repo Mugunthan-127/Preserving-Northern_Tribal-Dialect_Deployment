@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import config from '../config';
 import { Type, Check, RefreshCw, Wand2, MessageSquare, Trash2, ArrowRightLeft, Sparkles } from 'lucide-react';
 
 export const TranslationPanel = () => {
@@ -22,7 +23,7 @@ export const TranslationPanel = () => {
     const fetchPendingAssets = async () => {
         setLoading(true);
         try {
-            const res = await axios.get('http://localhost:8080/api/v1/translate/pending');
+            const res = await axios.get(`${config.API_BASE_URL}/api/v1/translate/pending`);
             setAssets(res.data);
             if (res.data.length > 0 && !selectedAsset) {
                 setSelectedAsset(res.data[0]);
@@ -51,7 +52,7 @@ export const TranslationPanel = () => {
 
             setLoading(true);
             try {
-                const res = await axios.post(`http://localhost:8080/api/v1/translate/auto/${selectedAsset.assetId}?targetLang=${targetLang}`);
+                const res = await axios.post(`${config.API_BASE_URL}/api/v1/translate/auto/${selectedAsset.assetId}?targetLang=${targetLang}`);
                 setTranslation(res.data.translatedText);
             } catch (err) {
                 console.error("Auto translate failed", err);
@@ -71,7 +72,7 @@ export const TranslationPanel = () => {
     const handleAutoTranslate = async () => {
         if (!selectedAsset) return;
         try {
-            const res = await axios.post(`http://localhost:8080/api/v1/translate/auto/${selectedAsset.assetId}?targetLang=${targetLang}`);
+            const res = await axios.post(`${config.API_BASE_URL}/api/v1/translate/auto/${selectedAsset.assetId}?targetLang=${targetLang}`);
             setTranslation(res.data.translatedText);
         } catch (err) {
             console.error(err);
@@ -82,7 +83,7 @@ export const TranslationPanel = () => {
         if (!translation) return;
         setIsPlaying(true);
         try {
-            const res = await axios.post('http://localhost:8080/api/v1/translate/tts', {
+            const res = await axios.post(`${config.API_BASE_URL}/api/v1/translate/tts`, {
                 text: translation,
                 lang: targetLang
             });
@@ -99,7 +100,7 @@ export const TranslationPanel = () => {
     const handleSubmit = async () => {
         if (!selectedAsset) return;
         try {
-            await axios.patch(`http://localhost:8080/api/v1/translate/${selectedAsset.assetId}`, {
+            await axios.patch(`${config.API_BASE_URL}/api/v1/translate/${selectedAsset.assetId}`, {
                 englishTranslation: translation
             });
             fetchPendingAssets();
@@ -118,7 +119,7 @@ export const TranslationPanel = () => {
         if (!pin) return;
 
         try {
-            await axios.delete(`http://localhost:8080/api/v1/translate/${selectedAsset.assetId}`, {
+            await axios.delete(`${config.API_BASE_URL}/api/v1/translate/${selectedAsset.assetId}`, {
                 headers: { 'X-Admin-Pin': pin }
             });
             alert("Asset deleted.");

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import config from '../config';
 import { Search, Play, Volume2, Globe, ArrowRight, Sparkles, BookOpen, Trash2 } from 'lucide-react';
 
 export const LanguageGallery = () => {
@@ -17,8 +18,8 @@ export const LanguageGallery = () => {
         setLoading(true);
         try {
             const url = query
-                ? `http://localhost:8080/api/v1/search?query=${query}`
-                : `http://localhost:8080/api/v1/search?query=`;
+                ? `${config.API_BASE_URL}/api/v1/search?query=${query}`
+                : `${config.API_BASE_URL}/api/v1/search?query=`;
 
             const res = await axios.get(url);
             const verified = res.data.filter(a => a.status === 'verified');
@@ -36,7 +37,7 @@ export const LanguageGallery = () => {
         if (!pin) return;
 
         try {
-            await axios.delete(`http://localhost:8080/api/v1/translate/${assetId}`, {
+            await axios.delete(`${config.API_BASE_URL}/api/v1/translate/${assetId}`, {
                 headers: { 'X-Admin-Pin': pin }
             });
             alert("Asset deleted.");
@@ -54,7 +55,7 @@ export const LanguageGallery = () => {
     const playTTS = async (text, id) => {
         try {
             // Updated to allow language passing if we had verified 'en' endpoint or target language
-            await axios.get(`http://localhost:8080/api/v1/tts?text=${encodeURIComponent(text)}&lang=en`);
+            await axios.get(`${config.API_BASE_URL}/api/v1/tts?text=${encodeURIComponent(text)}&lang=en`);
             alert("Playing Audio Preview...");
         } catch (err) {
             console.error(err);
